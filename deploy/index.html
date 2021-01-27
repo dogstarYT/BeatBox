@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="code.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body onload="onLoad()">
+    <div class="TopOverlay">
+        <div class="floatLeft">
+            <a class="sandwich" onclick="changeItemState('menu');return false" href="#menu"> &#9776;</a>
+        </div>
+
+        <div class="clearBoth"></div>
+
+    </div>
+
+    <!-- menu -->
+    <div id="menu" class="menu">
+
+        <a href="#Save" class="MenuElement"
+            onclick="changeItemState('menu');changeItemState('saveLog');return false">&#8226;
+            Save</a>
+        <br>
+        <a href="#Load" class="MenuElement"
+            onclick="changeItemState('menu');changeItemState('loadLog');fillLoad('loadName');return false">&#8226;
+            Load</a>
+        <br>
+        <a href="#ChooseInstruments" class="MenuElement"
+            onclick="changeItemState('menu');changeItemState('ChooseInstruments');loadInstruments('ChooseInstrumentsLog');return false">&#8226;
+            Choose
+            Instruments</a>
+        <br>
+        <a href="#clearAll" class="MenuElement" onclick="changeItemState('menu');clearAll();return false">&#8226; Clear
+            All</a>
+
+    </div>
+
+    <!-- Save -->
+    <div id="saveLog" class="saveAndLoad">
+
+        <button class="SaveExit" onclick="changeItemState('saveLog')">X</button>
+        <div class="NameLog">
+            Save
+        </div>
+        <a href="#Name" class="MenuElement" onclick="return false"> Name:</a>
+        <input type="text" id="saveName" class="textInput">
+        <a href="#Submit" class="Submit" onclick="save('saveName');return false"> Submit</a>
+    </div>
+    <!-- Load -->
+    <div id="loadLog" class="saveAndLoad">
+        <div class="NameLog">
+            Load
+        </div>
+        <button class="SaveExit" onclick="changeItemState('loadLog')">X</button>
+        <select name="Load name" id="loadName">
+
+        </select>
+
+        <a href="#Find" class="Submit" onclick="load('loadName');return false"> Find</a>
+    </div>
+    <!-- ChooseInstruments -->
+    <div id="ChooseInstruments" class="ChooseInstruments">
+        <div class="NameLog">
+            ChooseInstruments
+        </div>
+        <button class="SaveExit" onclick="changeItemState('ChooseInstruments')">X</button>
+
+        <div id="ChooseInstrumentsLog" class="ChooseInstrumentsLog"></div>
+
+
+        <div class="InstrumentsLogBottom">
+            <button class="okButton"
+                onclick="changeItemState('ChooseInstruments');loadAllInstruments('ChooseInstrumentsLog','CheckBox')">Ok</button>
+        </div>
+
+
+    </div>
+
+
+
+
+</body>
+
+</html>

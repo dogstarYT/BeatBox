@@ -1,0 +1,10 @@
+{
+    "beats": {
+        "Bum": "1",
+        "Bell": "2"
+    },
+    "gituar": {
+        "Top-down": "3",
+        "Down-top": "4"
+    }
+}
