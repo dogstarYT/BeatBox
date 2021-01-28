@@ -15,6 +15,16 @@
         <div class="floatLeft">
             <a class="sandwich" onclick="changeItemState('menu');return false" href="#menu"> &#9776;</a>
         </div>
+        <div class="floatLeft">
+            <label for="Lenght">Lenght : </label>
+            <input onchange="LenghtOrStepChange('stepsI','lenghtI')" value="8" min="1" type="number" id="lenghtI"
+                name="Lenght">
+        </div>
+        <div class="floatLeft">
+            <label for="Steps">Steps : </label>
+            <input onchange="LenghtOrStepChange('stepsI','lenghtI')" value="16" min="1" type="number" id="stepsI"
+                name="Steps">
+        </div>
 
         <div class="clearBoth"></div>
 
@@ -82,8 +92,8 @@
 
     </div>
 
-
-
+    <!-- ChooseInstruments -->
+    <canvas width="97%" height="90%" id="beatCanvas" class="beatCanvas"></canvas>
 
 </body>
 

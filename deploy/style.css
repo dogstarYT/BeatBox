@@ -10,6 +10,7 @@ html {
 .TopOverlay{
     height: 50px;
     background-color: black;
+    color: white;
 }
 .floatLeft{
     float: left;
@@ -148,4 +149,12 @@ html {
 }
 .okButton{
     width: 150px;
+}
+.beatCanvas{
+    background-color: rgb(110, 110, 110);
+    position: absolute;
+    top: 75px;
+    left: 25px;
+    height: 90%;
+    width: 97%;  
 }

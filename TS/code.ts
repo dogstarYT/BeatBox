@@ -1,4 +1,7 @@
 "use strict";
+let beatCanvas: HTMLCanvasElement;
+let ctxBeat: CanvasRenderingContext2D;
+
 let files: Array<string> = [];
 let allSoundsJson: any = {
     "beats": [
@@ -11,13 +14,13 @@ let allSoundsJson: any = {
     ]
 }
 
-let beatCanvas;
 let sidePadding = 10;
 function onLoad() {
 
     //    console.log("load");
+    LenghtOrStepChange('stepsI', 'lenghtI')
 
-
+    model.redraw("beatCanvas");
 }
 
 
@@ -140,5 +143,15 @@ function loadAllInstruments(cId: string, classId: string) {
             files.push(c.id);
         }
     });
-    files = files;
+    model.redraw("beatCanvas");
+}
+
+
+function LenghtOrStepChange(idStep: string, idLenght: string) {
+    let s = (document.getElementById(idStep) as HTMLInputElement).value;
+    let l = (document.getElementById(idLenght) as HTMLInputElement).value;
+
+    model.lenght = parseInt(l);
+    model.steps = parseInt(s);
+    model.redraw("beatCanvas")
 }

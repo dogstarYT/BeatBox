@@ -1,4 +1,6 @@
 "use strict";
+let beatCanvas;
+let ctxBeat;
 let files = [];
 let allSoundsJson = {
     "beats": [
@@ -10,9 +12,10 @@ let allSoundsJson = {
         "Down-top"
     ]
 };
-let beatCanvas;
 let sidePadding = 10;
 function onLoad() {
+    LenghtOrStepChange('stepsI', 'lenghtI');
+    model.redraw("beatCanvas");
 }
 function changeItemState(id) {
     let item = document.getElementById(id);
@@ -103,6 +106,55 @@ function loadAllInstruments(cId, classId) {
             files.push(c.id);
         }
     });
-    files = files;
+    model.redraw("beatCanvas");
 }
+function LenghtOrStepChange(idStep, idLenght) {
+    let s = document.getElementById(idStep).value;
+    let l = document.getElementById(idLenght).value;
+    model.lenght = parseInt(l);
+    model.steps = parseInt(s);
+    model.redraw("beatCanvas");
+}
+let model = {
+    lenght: 0,
+    steps: 0,
+    heightS: 0,
+    widthS: 0,
+    redraw: ((beatCanvasId) => {
+        let constant = 150;
+        if (files.length > 0) {
+            if (!beatCanvas) {
+                beatCanvas = document.getElementById(beatCanvasId);
+                ctxBeat = beatCanvas.getContext('2d');
+            }
+            ctxBeat.clearRect(0, 0, beatCanvas.width, beatCanvas.height);
+            beatCanvas.width = beatCanvas.clientWidth;
+            beatCanvas.height = beatCanvas.clientHeight;
+            model.heightS = beatCanvas.height / (files.length + 1);
+            model.widthS = (beatCanvas.width - constant) / (model.steps + 1);
+            for (let i = 1; i <= files.length; i++) {
+                ctxBeat.beginPath();
+                ctxBeat.moveTo(constant, (model.heightS + 1) * i);
+                ctxBeat.lineTo(beatCanvas.width, (model.heightS + 1) * i);
+                ctxBeat.stroke();
+                ctxBeat.font = "30px Arial";
+                ctxBeat.fillText(files[i - 1], 0, (model.heightS + 1) * i + 10);
+            }
+            for (let j = 1; j <= files.length; j++) {
+                for (let i = 1; i <= model.steps; i++) {
+                    ctxBeat.beginPath();
+                    ctxBeat.moveTo(model.widthS * i + constant, (model.heightS + 1) * j);
+                    ctxBeat.lineTo(model.widthS * i + constant, ((model.heightS + 1) * j) - 10);
+                    ctxBeat.stroke();
+                }
+                for (let i = 1; i <= model.steps; i++) {
+                    ctxBeat.beginPath();
+                    ctxBeat.moveTo((model.widthS * i) + constant, (model.heightS + 1) * j);
+                    ctxBeat.lineTo((model.widthS * i) + constant, ((model.heightS + 1) * j) + 10);
+                    ctxBeat.stroke();
+                }
+            }
+        }
+    })
+};
 //# sourceMappingURL=code.js.map
