@@ -1,28 +1,173 @@
 "use strict";
 let beatCanvas: HTMLCanvasElement;
 let ctxBeat: CanvasRenderingContext2D;
+let index: number = null;
 
-let files: Array<string> = [];
+
 let allSoundsJson: any = {
-    "beats": [
-        "Bum",
-        "Bell"
+    "Bells": [
+        "Bell-Hard",
+        "Bell-Hardest",
+        "Bell-Med",
+        "Bell-Soft",
+        "Bell-Softest",
+        "Cowbell-Hard",
+        "Cowbell-Hardest",
+        "Cowbell-Med",
+        "Cowbell-Soft",
+        "Cowbell-Softest"
     ],
-    "gituar": [
-        "Top-down",
-        "Down-top"
-    ]
+    "24-ride": [
+        "24Ride-1",
+        "24Ride-2",
+        "24Ride-3",
+        "24Ride-4",
+        "24Ride-5"
+    ],
+    "Crash": [
+        "Crash-Hard",
+        "Crash-Hardest",
+        "Crash-Med",
+        "Crash-Soft",
+        "Crash-Softest"
+    ],
+    "Hat": [
+        "HatClosed-Hard",
+        "HatClosed-Hardest",
+        "HatClosed-Med",
+        "HatClosed-Soft",
+        "HatClosed-Softest",
+        "HatOpen-Hard",
+        "HatOpen-Hardest",
+        "HatOpen-Med",
+        "HatOpen-Soft",
+        "HatOpen-Softest",
+        "HatPedal-Hard",
+        "HatPedal-Hardest",
+        "HatPedal-Med",
+        "HatPedal-Soft",
+        "HatPedal-Softest",
+        "HatSemiOpen-Hard",
+        "HatSemiOpen-Hardest",
+        "HatSemiOpen-Med",
+        "HatSemiOpen-Soft",
+        "HatSemiOpen-Softest"
+    ],
+    "Kick": [
+        "Kick-Hard",
+        "Kick-Hardest",
+        "Kick-Med",
+        "Kick-Soft",
+        "Kick-Softest"
+    ],
+    "Ride": [
+        "Ride-Hard",
+        "Ride-Hardest",
+        "Ride-Med",
+        "Ride-Soft",
+        "Ride-Softest",
+    ],
+    "SideSticks": [
+        "SideStick-Hard",
+        "SideStick-Hardest",
+        "SideStick-Med",
+        "SideStick-Soft",
+        "SideStick-Softest",
+    ],
+    "Tom": [
+        "Tom1-Hard",
+        "Tom1-Hardest",
+        "Tom1-Med",
+        "Tom1-Soft",
+        "Tom1-Softest",
+        "Tom2-Hard",
+        "Tom2-Hardest",
+        "Tom2-Med",
+        "Tom2-Soft",
+        "Tom2-Softest",
+        "TomFloor-Hard",
+        "TomFloor-Hardest",
+        "TomFloor-Med",
+        "TomFloor-Soft"
+    ],
+    "Snare": [
+        "Snare-Hard",
+        "Snare-Hardest",
+        "Snare-Med",
+        "Snare-Soft",
+        "Snare-Softest",
+        "SnareRimshot-Hard",
+        "SnareRimshot-Hardest",
+        "SnareRimshot-Med",
+        "SnareRimshot-Soft",
+        "SnareRimshot-Softest"
+    ],
+    "Splash": [
+        "Splash-Hard",
+        "Splash-Hardest",
+        "Splash-Med",
+        "Splash-Soft",
+        "Splash-Softest"
+    ],
+    "Others": ["HandClap"]
+
 }
 
 let sidePadding = 10;
 function onLoad() {
-
+    beatCanvas = (document.getElementById("beatCanvas") as HTMLCanvasElement);
     //    console.log("load");
     LenghtOrStepChange('stepsI', 'lenghtI')
 
-    model.redraw("beatCanvas");
+    model.reLoadModule(beatCanvas.id);
+
+    beatCanvas.onclick = ((e: MouseEvent) => {
+        model.ClickCauculation(e.offsetX, e.offsetY);
+    })
+    play(index);
 }
 
+function play(i: number) {
+    index = i;
+    console.log(index);
+
+    if (index != null) {
+        //   console.log("play");
+        for (let j = 0; j < model.files.length; j++) {
+            if (model.files[j].beats[index]) {
+                let audio = model.files[j].audio;
+                audio.pause();
+                audio.currentTime = 0;
+                audio.play();
+            }
+        }
+    } else {
+        //  console.log("Stop");
+    }
+
+    if (index >= model.steps - 1) {
+        index = -1;
+    }
+
+    setTimeout(() => {
+        if (index == null) {
+            play(null);
+        } else {
+            play(index + 1);
+        }
+
+    }, (model.lenght * 100) / model.steps);
+
+}
+
+function switchPausePlay() {
+    let oldIndex = index;
+    if (oldIndex != null) {
+        index = null;
+    } else if (oldIndex == null) {
+        index = 0;
+    }
+}
 
 function changeItemState(id: string) {
     let item = document.getElementById(id);
@@ -37,20 +182,29 @@ function changeItemState(id: string) {
 }
 
 function clearAll() {
-    console.log("clear all")
+    console.log("clear all");
+    model.files.forEach(f => {
+        f.beats = [];
+    });
+    model.redraw(beatCanvas.id);
 }
 
 function save(id: string) {
     let name = (document.getElementById(id) as HTMLInputElement).value;
-    localStorage.setItem(name, '1')
-    console.log("save " + name);
-
+    localStorage.setItem(name, JSON.stringify(model));
 }
 
 function load(id: string) {
-    let name = (document.getElementById(id) as HTMLInputElement).value;
-    console.log("find " + name);
+    let optionStorer = document.getElementById(id) as any;
+    let name = optionStorer.options[optionStorer.selectedIndex].text
+    let json = localStorage.getItem(name);
+    model = { ...model, ...JSON.parse(json) };
 
+    model.files.forEach(f => {
+        f.audio = new Audio("./sounds/" + f.fileName + ".wav")
+    });
+    console.log("find " + name);
+    model.redraw("beatCanvas");
 }
 
 function allStorageItems() {
@@ -113,9 +267,12 @@ function loadInstruments(id: string) {
             console.log("---" + fileName);
 
             let checked = ""
-            if (files.indexOf(fileName) != -1) {
-                checked = "checked";
-            }
+            model.files.forEach(f => {
+                if (f.fileName.indexOf(fileName) != -1) {
+                    checked = "checked";
+                }
+            });
+
 
             //make file div
             let fileDiv = document.createElement('div');
@@ -135,15 +292,31 @@ function loadAllInstruments(cId: string, classId: string) {
     let checkboxes = document.getElementById(cId).querySelectorAll("." + classId);
 
 
-    files = [];
+    let newfiles: Array<string> = [];
     //@ts-ignore
     checkboxes = checkboxes.forEach(c => {
         //@ts-ignore
         if (c.checked) {
-            files.push(c.id);
+            newfiles.push(c.id);
         }
     });
-    model.redraw("beatCanvas");
+    model.files = model.files.filter(f => {
+        return (newfiles.indexOf(f.fileName) != -1);
+    });
+    newfiles.forEach(n => {
+        if (!(model.files.find((f) => { return (f.fileName == n) }))) {
+
+            model.files.push({ fileName: n, beats: [], audio: new Audio("./sounds/" + n + ".wav") });
+        }
+
+    });
+
+    model.files.forEach(f => {
+        f.audio = new Audio("./sounds/" + f.fileName + ".wav")
+    });
+
+
+    model.reLoadModule(beatCanvas.id);
 }
 
 
@@ -153,5 +326,5 @@ function LenghtOrStepChange(idStep: string, idLenght: string) {
 
     model.lenght = parseInt(l);
     model.steps = parseInt(s);
-    model.redraw("beatCanvas")
+    model.reLoadModule(beatCanvas.id);
 }

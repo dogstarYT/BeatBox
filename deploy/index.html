@@ -25,6 +25,9 @@
             <input onchange="LenghtOrStepChange('stepsI','lenghtI')" value="16" min="1" type="number" id="stepsI"
                 name="Steps">
         </div>
+        <div class="floatRight">
+            <a class="sandwich" onclick="switchPausePlay();return false" href="#play"> &#9654; / &#9208;</a>
+        </div>
 
         <div class="clearBoth"></div>
 
@@ -60,19 +63,19 @@
         </div>
         <a href="#Name" class="MenuElement" onclick="return false"> Name:</a>
         <input type="text" id="saveName" class="textInput">
-        <a href="#Submit" class="Submit" onclick="save('saveName');return false"> Submit</a>
+        <a href="#Submit" class="Submit" onclick="changeItemState('saveLog');save('saveName');return false"> Submit</a>
     </div>
     <!-- Load -->
     <div id="loadLog" class="saveAndLoad">
         <div class="NameLog">
             Load
         </div>
-        <button class="SaveExit" onclick="changeItemState('loadLog')">X</button>
+        <button class="SaveExit" onclick=";changeItemState('loadLog')">X</button>
         <select name="Load name" id="loadName">
 
         </select>
 
-        <a href="#Find" class="Submit" onclick="load('loadName');return false"> Find</a>
+        <a href="#Find" class="Submit" onclick="load('loadName');changeItemState('loadLog');return false"> Find</a>
     </div>
     <!-- ChooseInstruments -->
     <div id="ChooseInstruments" class="ChooseInstruments">
